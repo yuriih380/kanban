@@ -1,0 +1,6 @@
+# Agents copy the Markdown templates in skills literally, so keep fenced code
+# in skill files as written (Prettier would otherwise pad the board table).
+overrides:
+  - files: "skills/**/*.md"
+    options:
+      embeddedLanguageFormatting: "off"
