@@ -1,0 +1,10 @@
+.research
+node_modules/
+
+# Boards the skill writes when dogfooding it in this repo
+.temp/
+
+# Local test installs made with `npx skills add .`
+.agents/skills/
+.claude/skills/
+skills-lock.json

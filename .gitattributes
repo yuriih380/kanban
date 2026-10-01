@@ -1,0 +1,2 @@
+# Normalize line endings to LF so Prettier checks pass on every platform.
+* text=auto eol=lf
