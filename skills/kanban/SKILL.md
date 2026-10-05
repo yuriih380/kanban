@@ -1,6 +1,10 @@
 ---
 name: kanban
 description: Split a large task, epic, or story into small actionable subtasks and maintain a minimal local Markdown Kanban board. Use when asked to create, update, or resume a local Kanban board.
+license: MIT
+metadata:
+  author: "yuriih380"
+  version: "0.1.0"
 ---
 
 # Kanban

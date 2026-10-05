@@ -9,11 +9,11 @@
     "kanban",
     "task-breakdown"
   ],
-  "homepage": "https://github.com/yuriih380/kanban-skill#readme",
-  "bugs": "https://github.com/yuriih380/kanban-skill/issues",
+  "homepage": "https://github.com/yuriih380/kanban#readme",
+  "bugs": "https://github.com/yuriih380/kanban/issues",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yuriih380/kanban-skill.git"
+    "url": "git+https://github.com/yuriih380/kanban.git"
   },
   "license": "MIT",
   "author": "yuriih380",
