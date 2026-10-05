@@ -1,4 +1,4 @@
-# kanban-skill
+# kanban
 
 An [Agent Skill](https://agentskills.io) that splits a large task, epic, or
 story into small, verifiable subtasks and tracks them on a minimal Markdown
@@ -13,20 +13,20 @@ Install with the [`skills` CLI](https://github.com/vercel-labs/skills)
 (requires Node.js 22.20 or later):
 
 ```bash
-npx skills add yuriih380/kanban-skill
+npx skills add yuriih380/kanban
 ```
 
 The CLI detects the agents on your machine and asks where to install the skill.
 Other common commands:
 
-| Goal                                   | Command                                                   |
-| -------------------------------------- | --------------------------------------------------------- |
-| Install for every project (user level) | `npx skills add yuriih380/kanban-skill -g`                |
-| Install for one agent without prompts  | `npx skills add yuriih380/kanban-skill -a claude-code -y` |
-| Install a specific release             | `npx skills add yuriih380/kanban-skill#v0.1.0`            |
-| Preview without installing             | `npx skills add yuriih380/kanban-skill --list`            |
-| Update                                 | `npx skills update kanban`                                |
-| Remove                                 | `npx skills remove kanban` (add `-g` for a user install)  |
+| Goal                                   | Command                                                  |
+| -------------------------------------- | -------------------------------------------------------- |
+| Install for every project (user level) | `npx skills add yuriih380/kanban -g`                     |
+| Install for one agent without prompts  | `npx skills add yuriih380/kanban -a claude-code -y`      |
+| Install a specific release             | `npx skills add yuriih380/kanban#v0.1.0`                 |
+| Preview without installing             | `npx skills add yuriih380/kanban --list`                 |
+| Update                                 | `npx skills update kanban`                               |
+| Remove                                 | `npx skills remove kanban` (add `-g` for a user install) |
 
 Without a tag, the CLI installs the latest commit on `main`. An install pinned
 to a tag stays on that tag when you run `update`; add the skill again without
@@ -64,6 +64,27 @@ How it works:
 
 See [`skills/kanban/SKILL.md`](skills/kanban/SKILL.md) for the full rules and
 templates.
+
+### Example
+
+Ask: "Prepare a quick-start guide. Explain the output files, add the installation
+command, and check the guide's links. Track the work on a Kanban board."
+
+After completing the first task and resuming the next one, the board looks like this:
+
+| TODO                                                                   | IN PROGRESS                                                                   | DONE                                                                      |
+| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| [TSK-03 — Check the guide links](examples/quick-start-guide/TSK-03.md) | [TSK-02 — Add the installation command](examples/quick-start-guide/TSK-02.md) | [TSK-01 — Explain the output files](examples/quick-start-guide/TSK-01.md) |
+
+Open the [example board](examples/quick-start-guide/BOARD.md) and its
+[EPIC.md](examples/quick-start-guide/EPIC.md) to see the goal and completion
+conditions. Each linked task file records its own status, scope, dependencies,
+and verification evidence. The completed task produced a
+[short guide](examples/quick-start-guide/GETTING_STARTED.md).
+
+This is an intermediate snapshot from a clean installation tested in Codex
+desktop on Windows. The test created the board, resumed it, and completed all
+three tasks. The snapshot keeps all three columns visible for illustration.
 
 ### Boards and version control
 
@@ -120,7 +141,12 @@ Add project-specific words to [`cspell.config.yaml`](cspell.config.yaml).
 2. In [`CHANGELOG.md`](CHANGELOG.md), move the `Unreleased` entries into a
    `## [<version>] - <YYYY-MM-DD>` section. Point `[unreleased]` at
    `compare/v<version>...HEAD` and add a `[<version>]` link reference.
-3. Run `npm run check` and commit. Tag the commit `v<version>` and push the tag.
+3. Run `npm ci` and `npm run check`, then commit and push to `main`. Wait for CI
+   to pass for that commit, including both Node.js versions and `skills-ref`.
+4. Confirm that `v<version>` does not already exist. Tag the verified commit,
+   push the tag, and create its GitHub release with notes from the changelog.
+5. In a clean project, verify `npx skills add yuriih380/kanban#v<version>` and
+   check that the installed files match `skills/kanban/` at the tagged commit.
 
 ## License
 
