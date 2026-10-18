@@ -4,7 +4,7 @@ description: Split a large task, epic, or story into small actionable subtasks a
 license: MIT
 metadata:
   author: "yuriih380"
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Kanban

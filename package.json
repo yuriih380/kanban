@@ -1,6 +1,6 @@
 {
   "name": "kanban-skill",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Agent skill that splits an epic into small subtasks and keeps a minimal Markdown Kanban board.",
   "keywords": [
@@ -19,10 +19,11 @@
   "author": "yuriih380",
   "type": "module",
   "scripts": {
-    "check": "npm run format:check && npm run spell && npm run validate",
+    "check": "npm run format:check && npm run spell && npm test && npm run validate",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "spell": "cspell --no-progress --gitignore --dot .",
+    "test": "node --test tests/validate-skills.test.mjs",
     "validate": "node scripts/validate-skills.mjs"
   },
   "devDependencies": {

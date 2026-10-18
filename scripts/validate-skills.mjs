@@ -33,7 +33,6 @@ const errors = [];
 const fail = (where, message) => errors.push(`${where}: ${message}`);
 
 const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
-const license = readFileSync(join(ROOT, "LICENSE"), "utf8");
 checkChangelog(readFileSync(join(ROOT, "CHANGELOG.md"), "utf8"));
 
 if (existsSync(join(ROOT, "SKILL.md"))) {
@@ -118,16 +117,9 @@ function validateSkill(dirName) {
     fail(where, "compatibility must be a string of at most 500 characters");
   }
 
-  // The root LICENSE is not installed, so each skill carries its own copy.
+  // License terms live at the repository root; skills declare the identifier.
   if (frontmatter.license !== pkg.license) {
     fail(where, `license must be "${pkg.license}" to match package.json`);
-  }
-  const licenseFile = join(SKILLS_DIR, dirName, "LICENSE.txt");
-  if (
-    !existsSync(licenseFile) ||
-    readFileSync(licenseFile, "utf8") !== license
-  ) {
-    fail(`skills/${dirName}/LICENSE.txt`, "must be a copy of the root LICENSE");
   }
 
   if (!isPlainObject(metadata)) {
@@ -221,13 +213,25 @@ function checkInstall(names) {
       fail("npx skills add", `installed [${installed}], expected [${names}]`);
     }
     for (const name of names) {
-      const source = listFiles(join(SKILLS_DIR, name));
-      const copied = listFiles(join(installRoot, name));
+      const sourceDir = join(SKILLS_DIR, name);
+      const installedDir = join(installRoot, name);
+      const source = listFiles(sourceDir);
+      const copied = listFiles(installedDir);
       if (source.join() !== copied.join()) {
         fail(
           "npx skills add",
           `${name} installed [${copied}], expected [${source}]`,
         );
+        continue;
+      }
+      for (const file of source) {
+        if (
+          !readFileSync(join(sourceDir, file)).equals(
+            readFileSync(join(installedDir, file)),
+          )
+        ) {
+          fail("npx skills add", `${name}/${file} installed bytes differ`);
+        }
       }
     }
   } finally {
