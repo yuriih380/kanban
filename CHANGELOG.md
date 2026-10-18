@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-18
+
+### Added
+
+- Validator regression tests run by `npm test` and `npm run check`.
+
+### Fixed
+
+- Installation validation now checks every copied file's bytes as well as
+  file names, rejecting changed content and missing or extra files.
+
+### Changed
+
+- Keep license text only in the root `LICENSE`; remove the bundled
+  `skills/kanban/LICENSE.txt` to avoid duplicate license files across installed
+  skills. Update validation, regression tests, and installation documentation.
+
 ## [0.1.0] - 2026-10-05
 
 ### Added
@@ -25,5 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A README example with linked board, epic, task files, and a short guide from
   a clean-install workflow test in Codex desktop on Windows.
 
-[unreleased]: https://github.com/yuriih380/kanban/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/yuriih380/kanban/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/yuriih380/kanban/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/yuriih380/kanban/releases/tag/v0.1.0

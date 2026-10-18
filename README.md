@@ -111,22 +111,26 @@ npm run check
 | `npm run format`       | Formats files with Prettier.                                    |
 | `npm run format:check` | Checks formatting without writing.                              |
 | `npm run spell`        | Spell-checks the repo with cspell.                              |
+| `npm test`             | Runs isolated validator regression tests.                       |
 | `npm run validate`     | Validates the skill and test-installs it with the `skills` CLI. |
-| `npm run check`        | Runs `format:check`, `spell`, and `validate`.                   |
+| `npm run check`        | Runs `format:check`, `spell`, `test`, and `validate`.           |
 
 `npm run validate` checks each skill's frontmatter against the
 [Agent Skills specification](https://agentskills.io/specification). It also
 checks that `metadata.version` matches `package.json` and the latest release in
-`CHANGELOG.md`, and that the skill's `LICENSE.txt` matches the root `LICENSE`.
+`CHANGELOG.md`, and that the skill's license identifier matches `package.json`.
 It then installs the skill into a temporary project and confirms that only the
-files in `skills/kanban/` were copied.
+files in `skills/kanban/` were copied and that every installed file's bytes
+match the source. `npm test` uses temporary fixtures and a local CLI stub to
+check validation failures and installation corruption without network access.
 
 CI runs `npm run check` and the specification's reference validator,
 [`skills-ref`](https://github.com/agentskills/agentskills/tree/main/skills-ref),
 on pushes to `main` and on pull requests.
 
-Only `skills/kanban/` reaches users, so it carries its own copy of the license.
-Keep repo tooling outside it, and don't add a `SKILL.md` at the repo root: the
+Only `skills/kanban/` reaches users. Keep the license text in the root `LICENSE`
+only, so installing multiple skills does not add a license file for each one.
+Keep repo tooling outside the skill folder, and don't add a `SKILL.md` at the repo root: the
 `skills` CLI would install the whole repository instead.
 
 Add project-specific words to [`cspell.config.yaml`](cspell.config.yaml).
@@ -151,3 +155,6 @@ Add project-specific words to [`cspell.config.yaml`](cspell.config.yaml).
 ## License
 
 [MIT](LICENSE) © yuriih380
+
+The license text is maintained at the repository root and is not copied into
+installed skill folders. The skill declares `license: MIT` in its frontmatter.
