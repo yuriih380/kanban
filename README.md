@@ -41,21 +41,44 @@ Ask your agent in plain language, for example:
 
 - "Break the payment refactor into a Kanban board."
 - "Resume the Kanban board and pick up the next task."
-- "Mark TSK-03 done; the tests pass."
+- "Mark QSG-3 done; the tests pass."
+- "Create a separate board for refactor-api-controller in the same project."
+- "Rename the API controller board to Simplify API and use SA for future ticket IDs."
 - "Convert our existing board to the Kanban skill format."
 
-The skill keeps each board in its own folder:
+The skill keeps each scope in its own epic folder under the master `kanban`
+folder. The project is the repository; names and ticket prefixes belong to
+individual boards:
 
 ```text
-.temp/kanban/<task-slug>-<DD-MM-YYYY>/
-  BOARD.md    TODO | IN PROGRESS | DONE table linking each in-scope task
-  EPIC.md     goal, scope, acceptance criteria, and shared notes
-  TSK-01.md   one file per subtask; the file owns its status
-  TSK-02.md
+.temp/kanban/
+  quick-start-guide/
+    BOARD.md                 TODO | IN PROGRESS | DONE links
+    EPIC.md                  board name, prefix, counter, goal, scope, and notes
+    QSG-1.md                 one file per ticket; the file owns its status
+    QSG-2.md
+    QSG-3.md
+  refactor-api-controller/
+    BOARD.md
+    EPIC.md
+    RAC-1.md
 ```
 
 How it works:
 
+- Boards have separate scopes, backlogs, and numbering starting at `1`.
+  Distinct board prefixes keep full ticket IDs and filenames unique in the
+  repository: `QSG-1` and `RAC-1` are different tickets.
+- Choose a board name and optional ticket prefix, or let the skill derive a
+  prefix from the board name. Each board stores its settings in its own
+  `EPIC.md`. If derived initials collide, the skill chooses an available suffix,
+  such as `RAC2`; an explicitly chosen conflicting prefix needs a different choice.
+- Change a board's name at any time. Its prefix stays the same unless you
+  request a prefix change too; a new prefix applies to future tickets while
+  that board's numbering continues. Existing ticket IDs and links stay stable,
+  and previous prefixes remain reserved.
+- `BOARD.md` and `EPIC.md` keep their filenames and identify their epic folder
+  in headings and link labels. Epic folder names use dashes, without dates.
 - Each task file holds the task's status, and the board is rebuilt from those
   statuses when they disagree.
 - A task moves to `DONE` only with evidence, such as a passing check.
@@ -72,19 +95,23 @@ command, and check the guide's links. Track the work on a Kanban board."
 
 After completing the first task and resuming the next one, the board looks like this:
 
-| TODO                                                                   | IN PROGRESS                                                                   | DONE                                                                      |
-| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| [TSK-03 — Check the guide links](examples/quick-start-guide/TSK-03.md) | [TSK-02 — Add the installation command](examples/quick-start-guide/TSK-02.md) | [TSK-01 — Explain the output files](examples/quick-start-guide/TSK-01.md) |
+| TODO                                                                        | IN PROGRESS                                                                        | DONE                                                                           |
+| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [QSG-3 — Check the guide links](examples/kanban/quick-start-guide/QSG-3.md) | [QSG-2 — Add the installation command](examples/kanban/quick-start-guide/QSG-2.md) | [QSG-1 — Explain the output files](examples/kanban/quick-start-guide/QSG-1.md) |
 
-Open the [example board](examples/quick-start-guide/BOARD.md) and its
-[EPIC.md](examples/quick-start-guide/EPIC.md) to see the goal and completion
+Open [quick-start-guide/BOARD.md](examples/kanban/quick-start-guide/BOARD.md) and
+[quick-start-guide/EPIC.md](examples/kanban/quick-start-guide/EPIC.md) to see the goal and completion
 conditions. Each linked task file records its own status, scope, dependencies,
 and verification evidence. The completed task produced a
-[short guide](examples/quick-start-guide/GETTING_STARTED.md).
+[short guide](examples/kanban/quick-start-guide/GETTING_STARTED.md).
 
-This is an intermediate snapshot from a clean installation tested in Codex
+This example adapts an intermediate snapshot from a clean installation tested in Codex
 desktop on Windows. The test created the board, resumed it, and completed all
-three tasks. The snapshot keeps all three columns visible for illustration.
+three tasks. The snapshot keeps all three columns visible for illustration;
+its paths and IDs have been updated to the board-specific prefix format.
+The illustrative [refactor-api-controller/BOARD.md](examples/kanban/refactor-api-controller/BOARD.md)
+has a separate scope and starts at `RAC-1`, with its own settings in
+[refactor-api-controller/EPIC.md](examples/kanban/refactor-api-controller/EPIC.md).
 
 ### Boards and version control
 
