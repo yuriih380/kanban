@@ -47,11 +47,13 @@ Ask your agent in plain language, for example:
 - "Convert our existing board to the Kanban skill format."
 
 The skill keeps each scope in its own epic folder under the master `kanban`
-folder. The project is the repository; names and ticket prefixes belong to
-individual boards:
+folder. Its parent is chosen from project instructions and the repository's
+structure (see [Boards and version control](#boards-and-version-control)).
+The project is the repository; names and ticket prefixes belong to individual
+boards:
 
 ```text
-.temp/kanban/
+<chosen-parent>/kanban/
   quick-start-guide/
     BOARD.md                 TODO | IN PROGRESS | DONE links
     EPIC.md                  board name, prefix, counter, goal, scope, and notes
@@ -115,9 +117,20 @@ has a separate scope and starts at `RAC-1`, with its own settings in
 
 ### Boards and version control
 
-Boards live under `.temp/` in your project. Add `.temp/` to your `.gitignore` to
-keep them local, or commit them to share progress with your team. For Git
-operations the skill follows your project's instructions.
+Your instructions and applicable project instructions determine where boards
+belong and whether they should be tracked in Git. Those instructions take
+priority over discovered folders, including when the project keeps boards in
+version control.
+
+When the location is unspecified, the skill reuses an existing board location
+or inspects the project for a suitable Git-ignored artifact folder, such as
+`tmp/`, `.tmp/`, or `.temp/`. It verifies Git's ignore behavior instead of
+assuming a temporary-looking name means the files are ignored. If no suitable
+location exists, it uses `kanban/` at the project root and reports its ignore
+status. It changes ignore rules only when instructed. Resumed boards keep
+their existing location unless relocation is requested or required by project
+instructions. Staging and committing follow your instructions and the project's
+Git rules.
 
 ## Roadmap
 

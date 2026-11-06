@@ -4,7 +4,7 @@ description: Split tasks, epics, or stories into actionable subtasks and maintai
 license: MIT
 metadata:
   author: "yuriih380"
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Kanban
@@ -13,12 +13,19 @@ Keep a compact `BOARD.md` per epic or scope, shared context in its `EPIC.md`, an
 
 ## Location
 
-Keep `kanban` as the master folder, under the user's requested location or the project's artifact-storage convention; default to `.temp/kanban/`. Resolve relative paths from the project root, or the working directory when no project is established. Use one master folder for the project's boards. When resuming, use the existing board directory, including legacy locations.
+Keep `kanban` as the master folder. Resolve relative paths from the project root, or the working directory when no project is established. Choose its location in this order:
+
+1. Read the user's current instructions and applicable project instructions (for example, `AGENTS.md`) for board locations, artifact storage, and Git tracking. Follow those instructions before inferring a convention from the filesystem. If boards should be tracked in Git, choose the prescribed location or a suitable non-ignored location; do not prefer ignored storage over that requirement.
+2. When instructions leave the location open, reuse the project's existing master folder. When resuming, keep the existing board directory, including legacy locations, unless relocation is requested or required by applicable instructions.
+3. Otherwise inspect the project's structure, including hidden directories and Git ignore rules, for a suitable local-artifact folder such as `tmp/`, `.tmp/`, or `.temp/`. Prefer an existing or configured Git-ignored artifact folder when one is available. Verify that the intended board files are actually ignored with Git (for example, `git check-ignore -v -- <board-file>`); a folder's name alone is not evidence. Avoid dependency, build-output, or cache directories that tools overwrite or routinely clean.
+4. If no suitable location is prescribed or found, use `kanban/` at the project root (or working directory outside a project). Do not create a temporary-folder convention or change ignore rules merely to hide the board. Change ignore rules only when requested or required by applicable instructions.
+
+Use one master folder for new boards and report the chosen path and whether it is Git-ignored. For Git operations, follow the user's and project's instructions.
 
 Each board has its own lowercase kebab-case epic folder, without a date suffix. Always name its board and context files exactly `BOARD.md` and `EPIC.md`. Derive ticket prefixes from board names, for example Refactor API Controller → `RAC` and Improve API Docs → `IAD`:
 
 ```text
-.temp/kanban/
+<chosen-parent>/kanban/
   refactor-api-controller/
     BOARD.md
     EPIC.md
@@ -77,7 +84,7 @@ A task's status records execution progress. Scope decisions determine which task
 
 1. Inventory the repository's boards and assign each an available board-specific prefix. Preserve unique legacy IDs (including `TSK-01`) and task content; reserve legacy prefixes against new use and record them in the relevant epic's history. Multiple legacy boards may retain the same historical prefix only where their full IDs are distinct; none may allocate new tickets under that shared prefix. If full IDs collide, assign fresh IDs under each affected board's new prefix, recording each old board path and ID in the ticket notes. Repair filenames, headings, board links, dependencies, and other local references by old path, not a global text replacement. Ask which ticket an ambiguous bare-ID reference means. Never overwrite a file or leave duplicate IDs. Initialize each board's counter above existing numbers under its current and previous prefixes and advance it for migrated tickets. Preserve shared context in each `EPIC.md`.
 2. Keep statuses that already use the permitted values. For unsupported statuses, use `TODO` when work has not started. Use `IN PROGRESS` when work has started but remains incomplete. Use `DONE` only when evidence verifies completion. Preserve the original status and any blocker or scope decision in task notes. Ask for clarification before converting a status when the available evidence leaves its meaning ambiguous.
-3. Apply the scope rules above when rebuilding the board. Keep existing folders unless the user requests relocation; when moving to `kanban/<epic-slug>/`, repair affected links and parent-folder labels.
+3. Apply the scope rules above when rebuilding the board. Keep existing folders unless relocation is requested or required by applicable instructions; choose any new location using the location rules above. When moving a board, repair affected links and parent-folder labels.
 
 ## Epic template
 

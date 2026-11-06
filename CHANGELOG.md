@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-06
+
+### Changed
+
+- Choose board locations from user and project instructions before inspecting
+  existing boards and Git-ignored artifact folders such as `tmp/` or `.tmp/`.
+  Support tracked boards and fall back to project-root `kanban/` when no suitable
+  location exists, without automatically changing ignore rules.
+
 ## [0.2.0] - 2026-11-06
 
 ### Changed
@@ -55,7 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A README example with linked board, epic, task files, and a short guide from
   a clean-install workflow test in Codex desktop on Windows.
 
-[unreleased]: https://github.com/yuriih380/kanban/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/yuriih380/kanban/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/yuriih380/kanban/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/yuriih380/kanban/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/yuriih380/kanban/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/yuriih380/kanban/releases/tag/v0.1.0
