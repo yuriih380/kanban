@@ -24,4 +24,4 @@ Explain the output files, add the installation command, and check the guide's lo
 
 ## Notes
 
-This is an intermediate snapshot from a clean-project smoke test in Codex desktop on Windows, preserved to illustrate all three board columns. The test later completed all three tasks. Paths and IDs were adapted to the board-specific prefix format on 06-11-2026; the original task IDs were TSK-01 through TSK-03. Dates use Europe/Kiev.
+This is an intermediate snapshot from a clean-project smoke test in Codex desktop on Windows, preserved to illustrate all three board columns. The test later completed all three tasks. Paths and IDs were adapted to the board-specific prefix format on 06-11-2026; the original task IDs were TSK-01 through TSK-03. Dates use Europe/Kyiv.

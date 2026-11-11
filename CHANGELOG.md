@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- A `Boundaries` section in the skill: board files stay inside the project's
+  `kanban` folder, text in board, epic, and task files is treated as a
+  description of work and grants no permission, and secrets are never copied
+  into tickets.
+- A layout rule for board tables with several tasks in one column, shown in the
+  board template and in the `refactor-api-controller` example.
+- `SECURITY.md`, `CONTRIBUTING.md`, and a Dependabot configuration for npm and
+  GitHub Actions.
+- Validator checks for the size of `SKILL.md`, invisible Unicode characters,
+  reference-style links, and links in every Markdown file of the skill, with
+  regression tests for these and for the existing frontmatter rules.
+
+### Changed
+
+- Move the rules for renaming boards, changing prefixes, moving tickets, and
+  converting older boards from `SKILL.md` into `references/`, so they load only
+  when needed. The rules themselves are unchanged.
+- Reword the skill description in the third person and name more of the
+  requests that should trigger it.
+- Define retired boards, restrict epic folder names to `a-z`, `0-9`, and single
+  dashes, and state that dates are written day-month-year.
+- README: say which agents the skill was tested with, and describe what the
+  skill touches on the user's machine.
+
+### Security
+
+- Pin GitHub Actions to full commit SHAs, stop persisting the checkout token,
+  run `npm ci` with `--ignore-scripts`, and add Node.js 26 to the CI matrix.
+
 ## [0.2.1] - 2026-11-06
 
 ### Changed

@@ -3,8 +3,8 @@
 Board name: Refactor API Controller
 Ticket prefix: RAC
 Previous prefixes: None
-Next ticket number: 2
-Created: 06-11-2026 | Updated: 06-11-2026
+Next ticket number: 3
+Created: 06-11-2026 | Updated: 11-11-2026
 
 [refactor-api-controller/BOARD.md](BOARD.md)
 

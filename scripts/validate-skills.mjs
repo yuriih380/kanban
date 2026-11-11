@@ -28,6 +28,12 @@ const ALLOWED_FIELDS = new Set([
 ]);
 const NAME_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const MAX_BODY_LINES = 500;
+// About 5,000 tokens, the specification's budget for a SKILL.md body. The line
+// limit alone misses long paragraphs.
+const MAX_BODY_CHARS = 20_000;
+// Zero-width, soft-hyphen, bidirectional-control, and tag characters can hide
+// text from a human reviewer.
+const HIDDEN_CHARS = /[­​-‏‪-‮⁠-⁤⁦-⁩﻿\u{E0000}-\u{E007F}]/u;
 
 const errors = [];
 const fail = (where, message) => errors.push(`${where}: ${message}`);
@@ -140,21 +146,53 @@ function validateSkill(dirName) {
   if (bodyLines > MAX_BODY_LINES) {
     fail(where, `body has ${bodyLines} lines; keep it under ${MAX_BODY_LINES}`);
   }
+  if (body.length > MAX_BODY_CHARS) {
+    fail(
+      where,
+      `body has ${body.length} characters; keep it under ${MAX_BODY_CHARS}`,
+    );
+  }
 
-  checkLinks(where, join(SKILLS_DIR, dirName), body);
+  // Every Markdown file in the skill is installed and may be read by an agent.
+  const skillDir = join(SKILLS_DIR, dirName);
+  for (const file of listFiles(skillDir)) {
+    if (!file.endsWith(".md")) continue;
+    const fileWhere = `skills/${dirName}/${file}`;
+    const isSkill = file === "SKILL.md";
+    const content = isSkill ? text : readFileSync(join(skillDir, file), "utf8");
+    if (!isSkill && content.includes("\r")) {
+      fail(fileWhere, "use LF line endings");
+    }
+    const hidden = HIDDEN_CHARS.exec(content);
+    if (hidden) {
+      const code = hidden[0].codePointAt(0).toString(16).toUpperCase();
+      fail(fileWhere, `remove the invisible character U+${code}`);
+    }
+    checkLinks(
+      fileWhere,
+      skillDir,
+      dirname(join(skillDir, file)),
+      isSkill ? body : content,
+    );
+  }
 }
 
 // Relative links must resolve inside the skill folder, because nothing
 // outside it is installed. Links inside code (templates) are ignored.
-function checkLinks(where, skillDir, body) {
+function checkLinks(where, skillDir, fileDir, body) {
   const prose = body
     .replace(/^ {0,3}(`{3,}|~{3,})[\s\S]*?^ {0,3}\1/gm, "")
     .replace(/`[^`\n]*`/g, "");
-  for (const [, target] of prose.matchAll(/\]\(([^)\s]+)\)/g)) {
+  const targets = [
+    ...prose.matchAll(/\]\(([^)\s]+)\)/g),
+    // Reference-style definitions: [label]: target
+    ...prose.matchAll(/^ {0,3}\[[^\]\n]+\]:[ \t]*<?([^\s>]+)>?/gm),
+  ].map((match) => match[1]);
+  for (const target of targets) {
     if (/^(?:[a-z]+:|#)/i.test(target)) continue;
     let path;
     try {
-      path = resolve(skillDir, decodeURI(target.split("#")[0]));
+      path = resolve(fileDir, decodeURI(target.split("#")[0]));
     } catch {
       fail(where, `link "${target}" is not a valid URI`);
       continue;

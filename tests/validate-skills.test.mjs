@@ -54,6 +54,10 @@ function write(root, path, contents) {
   writeFileSync(file, contents);
 }
 
+function writeSkill(root, contents) {
+  write(root, "skills/kanban/SKILL.md", contents);
+}
+
 function runFixture(change = () => {}) {
   mkdirSync(TEMP_ROOT, { recursive: true });
   // Keeping fixtures under the repo lets YAML resolve after a fresh npm ci.
@@ -166,6 +170,136 @@ const invalidSources = [
     "accidental root skill",
     (root) => write(root, "SKILL.md", skill),
     /root SKILL\.md hides skills\//,
+  ],
+  [
+    "uppercase name",
+    (root) => writeSkill(root, skill.replace("name: kanban", "name: Kanban")),
+    /name must be 1-64 lowercase letters/,
+  ],
+  [
+    "name that differs from its folder",
+    (root) => writeSkill(root, skill.replace("name: kanban", "name: board")),
+    /name "board" must match its folder "kanban"/,
+  ],
+  [
+    "reserved word in name",
+    (root) =>
+      write(
+        root,
+        "skills/claude-kanban/SKILL.md",
+        skill
+          .replace("name: kanban", "name: claude-kanban")
+          .replace("[Reference](references/guide.md)\n", ""),
+      ),
+    /must not contain the reserved words/,
+  ],
+  [
+    "missing description",
+    (root) =>
+      writeSkill(
+        root,
+        skill.replace("description: Track small tasks on a board.\n", ""),
+      ),
+    /description is required/,
+  ],
+  [
+    "overlong description",
+    (root) =>
+      writeSkill(
+        root,
+        skill.replace("Track small tasks on a board.", "x".repeat(1025)),
+      ),
+    /description must be at most 1024 characters/,
+  ],
+  [
+    "angle brackets in description",
+    (root) => writeSkill(root, skill.replace("small tasks", "<b>tasks</b>")),
+    /description must not contain angle brackets/,
+  ],
+  [
+    "unknown frontmatter field",
+    (root) =>
+      writeSkill(
+        root,
+        skill.replace("license: MIT", "license: MIT\nwhen_to_use: Always."),
+      ),
+    /unknown frontmatter field "when_to_use"/,
+  ],
+  [
+    "overlong compatibility",
+    (root) =>
+      writeSkill(
+        root,
+        skill.replace(
+          "license: MIT",
+          `license: MIT\ncompatibility: ${"x".repeat(501)}`,
+        ),
+      ),
+    /compatibility must be a string of at most 500 characters/,
+  ],
+  [
+    "non-string metadata value",
+    (root) =>
+      writeSkill(
+        root,
+        skill.replace('version: "1.2.3"', 'version: "1.2.3"\n  build: 7'),
+      ),
+    /metadata\.build must be a quoted string/,
+  ],
+  [
+    "CRLF line endings",
+    (root) => writeSkill(root, skill.replaceAll("\n", "\r\n")),
+    /SKILL\.md: use LF line endings/,
+  ],
+  [
+    "missing frontmatter",
+    (root) => writeSkill(root, "# Kanban\n"),
+    /missing YAML frontmatter/,
+  ],
+  [
+    "invalid frontmatter YAML",
+    (root) => writeSkill(root, skill.replace("name: kanban", "name: [kanban")),
+    /invalid frontmatter YAML/,
+  ],
+  [
+    "too many body lines",
+    (root) => writeSkill(root, skill + "line\n".repeat(501)),
+    /body has \d+ lines; keep it under 500/,
+  ],
+  [
+    "oversized body",
+    (root) => writeSkill(root, `${skill}${"x".repeat(20_001)}\n`),
+    /body has \d+ characters; keep it under 20000/,
+  ],
+  [
+    "invisible character",
+    (root) => writeSkill(root, `${skill}Zero​width\n`),
+    /SKILL\.md: remove the invisible character U\+200B/,
+  ],
+  [
+    "missing reference-style link",
+    (root) => writeSkill(root, `${skill}\n[missing]: references/missing.md\n`),
+    /link "references\/missing\.md" does not resolve/,
+  ],
+  [
+    "escaping link in a reference file",
+    (root) =>
+      write(
+        root,
+        "skills/kanban/references/guide.md",
+        "# Guide\n\n[License](../../../LICENSE)\n",
+      ),
+    /references\/guide\.md: link .* points outside the skill folder/,
+  ],
+  [
+    "CRLF in a reference file",
+    (root) => write(root, "skills/kanban/references/guide.md", "# Guide\r\n"),
+    /references\/guide\.md: use LF line endings/,
+  ],
+  [
+    "invisible character in a reference file",
+    (root) => write(root, "skills/kanban/references/guide.md", "# Gui‮de\n"),
+    /references\/guide\.md: remove the invisible character U\+202E/,
   ],
 ];
 

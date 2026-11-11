@@ -1,4 +1,4 @@
-.research
+.research/
 node_modules/
 
 # Boards the skill writes when dogfooding it in this repo
